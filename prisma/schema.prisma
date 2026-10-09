@@ -1,0 +1,140 @@
+// EarnVerse Core Data Model & Financial Ledger
+// Flat Peg: 1,000 Coins = $1.00 USD (ADR-003)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String               @id @default(cuid())
+  email           String               @unique
+  username        String               @unique
+  passwordHash    String?
+  role            String               @default("OPERATOR") // "OPERATOR" | "ADMIN"
+  status          String               @default("ACTIVE")   // "ACTIVE" | "SUSPENDED" | "BANNED"
+  trustScore      Int                  @default(100)
+  strikes         Int                  @default(0)
+  country         String               @default("GLOBAL")
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  wallet          Wallet?
+  ledgerEntries   LedgerEntry[]
+  withdrawals     Withdrawal[]
+  submissions     CampaignSubmission[]
+  offerwallEvents OfferwallEvent[]
+  auditLogs       AuditLog[]
+}
+
+model Wallet {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  availableCoins  Int      @default(0)
+  pendingCoins    Int      @default(0)
+  escrowCoins     Int      @default(0)
+  lifetimeEarned  Int      @default(0)
+  lifetimeCashed  Int      @default(0)
+  updatedAt       DateTime @updatedAt
+}
+
+model LedgerEntry {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount         Int      // Positive for credit (+), negative for debit (-)
+  coinTag        String   @default("EARNED") // "EARNED" | "PURCHASED" | "ESCROW_REWARD" | "ADMIN_ADJUSTMENT"
+  bucket         String   @default("AVAILABLE") // "AVAILABLE" | "PENDING" | "ESCROW"
+  reasonCode     String   // "OFFERWALL_CREDIT" | "CASHOUT_DEBIT" | "CASHOUT_REFUND" | "BOUNTY_REWARD" | "ADMIN_CORRECTION"
+  refType        String?  // "offerwall" | "withdrawal" | "submission" | "manual"
+  refId          String?
+  idempotencyKey String   @unique
+  meta           String?  // JSON stringified metadata
+  createdAt      DateTime @default(now())
+}
+
+model Withdrawal {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coins           Int
+  amountUsd       Float
+  rail            String   // "UPI" | "USDT_TRC20" | "LTC" | "PAYPAL"
+  destination     String   // Destination address, UPI ID, or PayPal email
+  status          String   @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  reviewedBy      String?
+  rejectionReason String?
+  txRef           String?  // Blockchain or banking reference
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model OfferwallEvent {
+  id             String   @id @default(cuid())
+  network        String   // "BITLABS" | "CPX" | "TOROX" | "LOOTABLY"
+  transactionId  String
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payoutUsd      Float
+  coinsCredited  Int
+  status         String   @default("CREDITED") // "CREDITED" | "REVERSED" | "FLAGGED"
+  signatureValid Boolean  @default(true)
+  rawPayload     String?
+  createdAt      DateTime @default(now())
+
+  @@unique([network, transactionId])
+}
+
+model Campaign {
+  id              String               @id @default(cuid())
+  title           String
+  platform        String               // "TIKTOK" | "YOUTUBE" | "INSTAGRAM"
+  status          String               @default("ACTIVE") // "ACTIVE" | "PAUSED" | "EXHAUSTED"
+  poolCoins       Int
+  escrowRemaining Int
+  ratePer1k       Int
+  description     String?
+  guidelines      String?
+  createdAt       DateTime             @default(now())
+  submissions     CampaignSubmission[]
+}
+
+model CampaignSubmission {
+  id              String   @id @default(cuid())
+  campaignId      String
+  campaign        Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clipUrl         String
+  viewsClaimed    Int      @default(0)
+  coinsReward     Int      @default(0)
+  status          String   @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  reviewedBy      String?
+  rejectionReason String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  actor      User     @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  action     String   // "BALANCE_ADJUST" | "USER_BAN" | "USER_UNBAN" | "CASHOUT_APPROVE" | "CASHOUT_REJECT" | "EMERGENCY_FREEZE"
+  targetType String   // "user" | "withdrawal" | "system"
+  targetId   String
+  reason     String
+  meta       String?  // JSON string
+  createdAt  DateTime @default(now())
+}
+
+model SystemConfig {
+  id                 String   @id @default("singleton")
+  emergencyFreeze    Boolean  @default(false)
+  minWithdrawalCoins Int      @default(1000) // 1,000 Coins = $1.00 USD
+  updatedAt          DateTime @updatedAt
+}

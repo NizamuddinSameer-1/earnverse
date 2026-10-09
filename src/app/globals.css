@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #0B0D13;
+  --color-surface: #0E1118;
+  --color-surface-card: #131620;
+  --color-surface-elevated: #191D2A;
+  --color-surface-item: #1E2333;
+  --color-surface-high: #272C3E;
+  --color-surface-lowest: #07080C;
+  
+  --color-border-dark: #222636;
+  --color-border-subtle: #1C202E;
+  --color-border-hover: #33394E;
+  
+  --color-lime-neon: #C6FF3E;
+  --color-lime-dim: #9ece27;
+  
+  --color-gold-accent: #FFB020;
+  --color-gold-dim: #CC8E14;
+  --color-crimson-accent: #FF4757;
+  
+  --color-text-primary: #F1F3F9;
+  --color-text-muted: #94A3B8;
+  --color-text-dim: #7A8699;
+  --color-text-inverted: #0A0D08;
+  
+  --font-grotesk: var(--font-space-grotesk), sans-serif;
+  --font-body: var(--font-ibm-plex-sans), sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  /* Mobile integrity: a fixed sidebar/header or a wide child must never
+     produce a sideways-scrolling page. See design debt audit 2026-10-08. */
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #0B0D13;
+  color: #F1F3F9;
+  font-family: var(--font-ibm-plex-sans), sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Long unbroken tokens (IDs, URLs, task names) must wrap rather than
+   push the layout wide — a common cause of mobile overflow. */
+main p,
+main h1,
+main h2,
+main h3,
+main span,
+main strong {
+  overflow-wrap: anywhere;
+}
+
+/* Tables scroll inside their own container instead of widening the page. */
+main table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Tabular numbers for all financial & coin data */
+.tabular-nums, [data-numeric], .font-mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Crisp terminal custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0D13;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222636;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #31374C;
+}
+
+/* Micro-interaction utility for tactile buttons */
+.btn-tactile {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-tactile:active {
+  transform: scale(0.98) translateY(1px);
+}
+
+/* ============================================================
+   MOTION SYSTEM — resolves design debt D-9 (no motion spec)
+   Arcade Terminal: crisp, mechanical, zero blur, zero bounce.
+   Durations are deliberately short; this is a terminal, not a toy.
+   ============================================================ */
+
+@theme {
+  /* Easing: one shared curve drives the whole UI (consistency = quality) */
+  --ease-terminal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Duration scale — mirrors micro / standard / emphasis */
+  --duration-micro: 120ms;   /* hover, press, checkbox tick */
+  --duration-standard: 200ms; /* dropdowns, tooltips, tab switch */
+  --duration-emphasis: 320ms; /* modals, drawers, page-level reveals */
+
+  /* Stagger unit for sequence reveals */
+  --stagger-unit: 60ms;
+}
+
+/* --- Reveal on mount (SSR-safe: starts hidden only when JS enables it) --- */
+[data-reveal] {
+  opacity: 1;
+}
+
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity var(--duration-emphasis) var(--ease-terminal),
+    transform var(--duration-emphasis) var(--ease-terminal);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js [data-reveal="in"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Live coin tick: money values acknowledge change without layout shift --- */
+@keyframes coin-tick {
+  0%   { transform: translateY(0); }
+  35%  { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+.coin-tick {
+  animation: coin-tick 260ms var(--ease-terminal);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Pulse for live/streaming indicators --- */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+.live-dot {
+  animation: live-pulse 2s var(--ease-terminal) infinite;
+}
+
+/* --- Scanline sheen for terminal hero surfaces (no blur, no gradient text) --- */
+@keyframes scan-drift {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scan-sheen::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(198, 255, 62, 0.04),
+    transparent
+  );
+  animation: scan-drift 6s linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Mandatory: non-essential motion must be disableable (WCAG 2.3.3). */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .scan-sheen::after,
+  .live-dot {
+    animation: none !important;
+  }
+}
