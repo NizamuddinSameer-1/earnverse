@@ -4,6 +4,7 @@ export interface IconProps {
   size?: number | string;
   className?: string;
   strokeWidth?: number;
+  fill?: string;
 }
 
 // ==========================================
@@ -272,13 +273,13 @@ export function IconEye({ size = 18, className = "", strokeWidth = 2 }: IconProp
   );
 }
 
-export function IconHeart({ size = 18, className = "", strokeWidth = 2 }: IconProps) {
+export function IconHeart({ size = 18, className = "", strokeWidth = 2, fill = "none" }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
+      fill={fill}
       stroke="currentColor"
       strokeWidth={strokeWidth}
       strokeLinecap="round"
@@ -1033,6 +1034,20 @@ export function IconPoll({ size = 18, className = "", strokeWidth = 2 }: IconPro
       <line x1="6" y1="20" x2="6" y2="12" />
       <line x1="12" y1="20" x2="12" y2="6" />
       <line x1="18" y1="20" x2="18" y2="15" />
+    </svg>
+  );
+}
+
+export function IconPlay({ size = 18, className = "", strokeWidth = 2 }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <polygon points="6 4 20 12 6 20 6 4" />
     </svg>
   );
 }
