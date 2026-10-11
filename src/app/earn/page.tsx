@@ -3,24 +3,20 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/Card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { CoinIcon } from "@/components/ui/CoinIcon";
 import {
   IconBolt,
-  IconVideo,
   IconClock,
   IconTrophy,
   IconFlame,
   IconCheck,
-  IconSparkles,
   IconShield,
-  IconVault,
   IconArrowUpRight,
   IconX,
   IconLock,
-  IconRefresh,
 } from "@/components/ui/Icons";
 
 interface TaskItem {
@@ -45,21 +41,21 @@ const allTasks: TaskItem[] = [
     category: "survey",
     title: "Consumer Sentiment: Global FinTech & Mobile Banking Study",
     time: "12 min",
-    coins: 850,
-    usd: "$0.85",
-    tag: "Offerwall Credit",
+    coins: 1450,
+    usd: "$1.45",
+    tag: "High Match Rate",
     platforms: ["iOS", "Android", "Web"],
   },
   {
     id: "task-2",
-    provider: "Torox",
+    provider: "Torox Arcade",
     networkSlug: "torox",
     category: "high-yield",
     title: "Reach Castle Tier 10 in Clash of Legends: War Strategy",
-    time: "20 min",
-    coins: 12000,
-    usd: "$12.00",
-    tag: "Multi-Tier Milestone",
+    time: "Milestone",
+    coins: 18000,
+    usd: "$18.00",
+    tag: "Tiered Cash Milestone",
     platforms: ["Android", "iOS"],
   },
   {
@@ -70,9 +66,9 @@ const allTasks: TaskItem[] = [
     time: "15 min",
     coins: 25000,
     usd: "$25.00",
-    tag: "Coming Soon // Phase 2",
+    tag: "Coming Soon",
     platforms: ["Desktop", "Cloud Drive"],
-    spots: "Phase 2 Preview",
+    spots: "VIP Access",
   },
   {
     id: "task-4",
@@ -81,20 +77,21 @@ const allTasks: TaskItem[] = [
     category: "survey",
     title: "Automotive Buying Behavior & EV Infrastructure Poll",
     time: "8 min",
-    coins: 1450,
-    usd: "$1.45",
-    tag: "High Match Rate",
+    coins: 2200,
+    usd: "$2.20",
+    tag: "Instant Credit",
     platforms: ["Web", "Mobile"],
   },
   {
     id: "task-5",
-    provider: "AdGate Media",
+    provider: "Torox Arcade",
+    networkSlug: "torox",
     category: "install",
-    title: "Install & Level 5 Unlock: Raid Tactics Tactical RPG",
+    title: "Install & Level 5 Unlock: Raid Tactics RPG",
     time: "5 min setup",
-    coins: 2500,
-    usd: "$2.50",
-    tag: "Install Milestone",
+    coins: 3500,
+    usd: "$3.50",
+    tag: "Quick Install",
     platforms: ["iOS", "Android"],
   },
   {
@@ -105,9 +102,9 @@ const allTasks: TaskItem[] = [
     time: "10 min",
     coins: 15000,
     usd: "$15.00",
-    tag: "Coming Soon // Phase 2",
+    tag: "Coming Soon",
     platforms: ["CapCut", "Premiere"],
-    spots: "Phase 2 Preview",
+    spots: "VIP Access",
   },
 ];
 
@@ -129,7 +126,6 @@ export default function EarnFeedPage() {
   const [launchingTaskId, setLaunchingTaskId] = useState<string | null>(null);
   const [startedTasks, setStartedTasks] = useState<string[]>([]);
 
-  // Offerwall interactive modal state
   const [offerwall, setOfferwall] = useState<OfferwallModalState>({
     isOpen: false,
     network: null,
@@ -155,7 +151,7 @@ export default function EarnFeedPage() {
         network === "bitlabs"
           ? "BitLabs Surveys & Offers"
           : network === "cpx"
-          ? "CPX Research Survey Wall"
+          ? "CPX Research Survey Lounge"
           : "Torox Arcade",
       taskTitle,
       loading: true,
@@ -173,7 +169,7 @@ export default function EarnFeedPage() {
           loading: false,
           error:
             data.error ||
-            "Unable to connect to offerwall service. Please ensure you are logged in.",
+            "Please log in to your EarnVerse account to launch offerwalls.",
         }));
         if (taskId) setLaunchingTaskId(null);
         return;
@@ -216,12 +212,11 @@ export default function EarnFeedPage() {
     if (task.networkSlug) {
       openOfferwall(task.networkSlug, task.title, task.id);
     } else {
-      // Generic mock simulator
       setLaunchingTaskId(task.id);
       window.setTimeout(() => {
         setStartedTasks((prev) => (prev.includes(task.id) ? prev : [...prev, task.id]));
         setLaunchingTaskId(null);
-      }, 1200);
+      }, 1000);
     }
   };
 
@@ -238,29 +233,33 @@ export default function EarnFeedPage() {
   return (
     <DashboardLayout>
       <div className="flex flex-col gap-8">
-        {/* Header Strip */}
-        <div className="relative overflow-hidden rounded bg-gradient-to-r from-surface-card via-surface to-canvas border border-border-dark p-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 relative z-10">
+        {/* Header Hero Banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500/15 via-[#0E131E] to-indigo-500/10 border border-white/[0.08] p-6 sm:p-8 backdrop-blur-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
             <div className="flex items-center gap-4 min-w-0">
-              <div className="w-12 h-12 shrink-0 rounded bg-lime-neon/10 border border-lime-neon/30 flex items-center justify-center text-lime-neon">
-                <IconBolt size={24} strokeWidth={2.2} />
+              <div className="w-14 h-14 shrink-0 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.25)]">
+                <IconBolt size={28} strokeWidth={2.2} />
               </div>
               <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <h1 className="font-grotesk text-xl sm:text-2xl font-bold text-text-primary tracking-tight uppercase">
-                    TASK MATRIX // ACTIVE CONTRACTS
+                <div className="flex items-center gap-3 flex-wrap">
+                  <h1 className="font-grotesk text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                    Earn Lounge & Offerwalls
                   </h1>
-                  <Badge variant="lime">LIVE GATEWAY</Badge>
+                  <Badge variant="emerald" dot>
+                    ACTIVE REWARDS
+                  </Badge>
                 </div>
-                <span className="font-mono text-xs text-text-muted mt-1">
-                  Connected live networks: BitLabs, CPX Research, Torox, and operator-verified creator escrows.
-                </span>
+                <p className="text-sm text-slate-400 mt-1">
+                  Complete surveys and tasks from verified ad networks. Coins credit to your wallet automatically.
+                </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 font-mono text-xs text-text-muted flex-wrap min-w-0">
-              <span>ACTIVE NETWORKS:</span>
-              <strong className="text-text-primary">BITLABS · CPX · TOROX · CREATOR ESCROW</strong>
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="text-xs text-slate-400">Pegged Rate:</span>
+              <span className="font-mono text-xs text-amber-400 font-bold bg-amber-400/10 border border-amber-400/25 px-3 py-1.5 rounded-xl">
+                1,000 Coins = $1.00 USD
+              </span>
             </div>
           </div>
         </div>
@@ -268,21 +267,21 @@ export default function EarnFeedPage() {
         {/* Filters and Navigation Row */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           {/* Category Tabs */}
-          <div className="flex items-center gap-1.5 p-1 bg-surface-card border border-border-dark rounded font-mono text-xs flex-wrap">
+          <div className="flex items-center gap-2 p-1.5 bg-[#0B0E14] border border-white/[0.08] rounded-xl text-xs flex-wrap">
             {[
-              { id: "all", label: "ALL CONTRACTS" },
-              { id: "high-yield", label: "HIGH YIELD" },
-              { id: "survey", label: "SURVEYS" },
-              { id: "install", label: "APP INSTALLS" },
-              { id: "bounty", label: "CREATOR BOUNTIES (SOON)" },
+              { id: "all", label: "All Offers" },
+              { id: "high-yield", label: "High Paying ($5+)" },
+              { id: "survey", label: "Surveys" },
+              { id: "install", label: "Mobile Games" },
+              { id: "bounty", label: "Creator Studio (Soon)" },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-1.5 rounded transition-all font-semibold cursor-pointer ${
+                className={`px-3.5 py-2 rounded-lg transition-all font-semibold cursor-pointer ${
                   activeTab === tab.id
-                    ? "bg-lime-neon text-text-inverted font-bold"
-                    : "text-text-muted hover:text-text-primary"
+                    ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black shadow-[0_0_12px_rgba(245,158,11,0.3)] font-bold"
+                    : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
                 {tab.label}
@@ -291,16 +290,16 @@ export default function EarnFeedPage() {
           </div>
 
           {/* Network Selector */}
-          <div className="flex items-center gap-1.5 font-mono text-xs flex-wrap">
-            <span className="text-text-muted mr-1">Network:</span>
-            {["all", "BitLabs", "CPX Research", "Torox", "Creator Bounty"].map((prov) => (
+          <div className="flex items-center gap-2 text-xs flex-wrap">
+            <span className="text-slate-400">Network:</span>
+            {["all", "BitLabs", "CPX Research", "Torox Arcade"].map((prov) => (
               <button
                 key={prov}
                 onClick={() => setSelectedProvider(prov)}
-                className={`px-2.5 py-1 rounded border text-[11px] transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg border text-xs transition-all cursor-pointer ${
                   selectedProvider === prov
-                    ? "bg-surface-item border-lime-neon/60 text-lime-neon font-bold"
-                    : "bg-surface-card border-border-dark text-text-muted hover:text-text-primary"
+                    ? "bg-amber-400/15 border-amber-400/50 text-amber-400 font-bold"
+                    : "bg-white/[0.04] border-white/[0.08] text-slate-400 hover:text-white"
                 }`}
               >
                 {prov === "all" ? "All Networks" : prov}
@@ -309,63 +308,57 @@ export default function EarnFeedPage() {
           </div>
         </div>
 
-        {/* Main Content Layout with Right Context Rail */}
+        {/* Main Feed Grid with Right Rail */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Feed Column (col-span-8) */}
-          {/* h2 gives the repeated task-card h3s a valid parent (axe heading-order). */}
-          <h2 className="sr-only">Available tasks</h2>
-          <div className="lg:col-span-8 flex flex-col gap-3.5">
+          {/* Main Feed Column */}
+          <div className="lg:col-span-8 flex flex-col gap-4">
             {filteredTasks.map((task) => (
-              <Card key={task.id} interactive className="group">
-                <CardContent className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4">
-                  {/* Left Task Info */}
-                  <div className="flex flex-col gap-1.5 min-w-0 flex-1">
-                    <div className="flex items-center gap-2 font-mono text-[10px] flex-wrap">
-                      <span className="px-2 py-0.5 rounded bg-canvas border border-border-dark text-text-primary font-bold uppercase">
+              <Card key={task.id} interactive className="p-5 hover:border-amber-400/40 transition-all">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  {/* Left Info */}
+                  <div className="flex flex-col gap-2 min-w-0 flex-1">
+                    <div className="flex items-center gap-2 text-xs flex-wrap">
+                      <span className="px-2.5 py-0.5 rounded-md bg-white/[0.06] border border-white/[0.1] text-white font-semibold">
                         {task.provider}
                       </span>
-                      <span className="text-lime-neon font-semibold">{task.tag}</span>
+                      <span className="text-amber-400 text-xs font-semibold">{task.tag}</span>
                       {task.spots && (
-                        <span className="text-gold-accent font-semibold bg-gold-accent/10 px-1.5 py-0.5 rounded">
+                        <span className="text-violet-400 text-xs font-semibold bg-violet-500/10 px-2 py-0.5 rounded-md">
                           {task.spots}
                         </span>
                       )}
                     </div>
 
-                    <h3 className="font-grotesk text-sm font-bold text-text-primary group-hover:text-lime-neon transition-colors">
+                    <h3 className="font-grotesk text-base font-bold text-white hover:text-amber-400 transition-colors">
                       {task.title}
                     </h3>
 
-                    <div className="flex items-center gap-3 font-mono text-xs text-text-muted">
+                    <div className="flex items-center gap-3 text-xs text-slate-400">
                       <span className="flex items-center gap-1">
-                        <IconClock size={13} className="text-text-dim" />
+                        <IconClock size={13} className="text-slate-500" />
                         {task.time}
                       </span>
-                      <span>·</span>
+                      <span>•</span>
                       <span>{task.platforms.join(" / ")}</span>
                     </div>
                   </div>
 
-                  {/* Right Rewards & Start Action */}
-                  <div className="flex items-center gap-4 shrink-0 sm:self-center w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-border-subtle pt-3 sm:pt-0">
-                    <div className="flex flex-col items-start sm:items-end font-mono">
+                  {/* Right Rewards & Action */}
+                  <div className="flex items-center gap-5 shrink-0 sm:self-center w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-white/[0.06] pt-3 sm:pt-0">
+                    <div className="flex flex-col items-start sm:items-end">
                       <div className="flex items-center gap-1.5">
                         <CoinIcon size={18} />
-                        <span className="text-gold-accent font-bold text-base tabular-nums">
+                        <span className="font-mono text-amber-400 font-bold text-lg tabular-nums">
                           +{task.coins.toLocaleString()}
                         </span>
                       </div>
-                      <span className="text-text-muted text-xs">≈ {task.usd} USD</span>
+                      <span className="text-emerald-400 font-mono text-xs font-semibold">≈ {task.usd} USD</span>
                     </div>
 
                     {task.category === "bounty" ? (
                       <Link href="/creator-studio">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="font-mono text-xs"
-                        >
-                          SOON // PREVIEW
+                        <Button variant="secondary" size="sm">
+                          Preview Studio
                         </Button>
                       </Link>
                     ) : startedTasks.includes(task.id) ? (
@@ -373,143 +366,87 @@ export default function EarnFeedPage() {
                         variant="secondary"
                         size="sm"
                         isLoading={launchingTaskId === task.id}
-                        leftIcon={<IconCheck size={14} className="text-lime-neon" />}
+                        leftIcon={<IconCheck size={14} className="text-emerald-400" />}
                         onClick={() => handleStartTask(task)}
                       >
-                        RE-OPEN WALL
+                        Re-Open
                       </Button>
                     ) : (
                       <Button
-                        variant="neon"
+                        variant="gold"
                         size="sm"
                         isLoading={launchingTaskId === task.id}
                         onClick={() => handleStartTask(task)}
                       >
-                        {launchingTaskId === task.id ? "CONNECTING..." : "START TASK"}
+                        {launchingTaskId === task.id ? "Connecting..." : "Start Offer"}
                       </Button>
                     )}
                   </div>
-                </CardContent>
+                </div>
               </Card>
             ))}
           </div>
 
-          {/* Right Context Rail (col-span-4) */}
+          {/* Right Rail: Direct Network Launchers */}
           <div className="lg:col-span-4 flex flex-col gap-6">
-            {/* Network Health Box */}
-            <Card>
-              <CardHeader>
+            <Card className="p-5">
+              <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
                 <div className="flex items-center gap-2">
-                  <IconVault size={16} className="text-lime-neon" />
-                  <CardTitle>OFFERWALL GATEWAYS</CardTitle>
+                  <IconBolt size={18} className="text-amber-400" />
+                  <span className="font-grotesk font-bold text-sm text-white">DIRECT OFFERWALLS</span>
                 </div>
-                <Badge variant="lime" size="sm">
+                <Badge variant="emerald" size="sm" dot>
                   LIVE
                 </Badge>
-              </CardHeader>
+              </div>
 
-              <CardContent className="flex flex-col gap-2.5 font-mono text-xs p-4">
-                {/* BitLabs */}
-                <div className="p-3 bg-canvas border border-border-dark rounded flex items-center justify-between gap-3">
-                  <div className="flex flex-col gap-0.5">
+              <div className="flex flex-col gap-3 pt-4">
+                {/* BitLabs Direct */}
+                <div className="p-3.5 bg-white/[0.03] border border-white/[0.06] rounded-xl flex items-center justify-between gap-3">
+                  <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-lime-neon">●</span>
-                      <span className="text-text-primary font-bold">BitLabs Surveys</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                      <span className="text-sm font-bold text-white">BitLabs Surveys</span>
                     </div>
-                    <span className="text-[11px] text-text-muted">Live Token Configured</span>
+                    <span className="text-[11px] text-slate-400">High Match Token Verified</span>
                   </div>
-                  <Button
-                    variant="neon"
-                    size="sm"
-                    className="text-xs h-7 px-2.5"
-                    onClick={() => openOfferwall("bitlabs")}
-                  >
-                    LAUNCH
+                  <Button variant="gold" size="sm" onClick={() => openOfferwall("bitlabs")}>
+                    Launch
                   </Button>
                 </div>
 
-                {/* CPX Research */}
-                <div className="p-3 bg-canvas border border-border-dark rounded flex items-center justify-between gap-3">
-                  <div className="flex flex-col gap-0.5">
+                {/* CPX Research Direct */}
+                <div className="p-3.5 bg-white/[0.03] border border-white/[0.06] rounded-xl flex items-center justify-between gap-3">
+                  <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-lime-neon">●</span>
-                      <span className="text-text-primary font-bold">CPX Research</span>
+                      <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                      <span className="text-sm font-bold text-white">CPX Research</span>
                     </div>
-                    <span className="text-[11px] text-text-muted">Secure Hash Configured</span>
+                    <span className="text-[11px] text-slate-400">Adaptive Survey Router</span>
                   </div>
-                  <Button
-                    variant="neon"
-                    size="sm"
-                    className="text-xs h-7 px-2.5"
-                    onClick={() => openOfferwall("cpx")}
-                  >
-                    LAUNCH
+                  <Button variant="secondary" size="sm" onClick={() => openOfferwall("cpx")}>
+                    Launch
                   </Button>
                 </div>
-
-                {/* Torox */}
-                <div className="p-3 bg-canvas border border-border-dark rounded flex items-center justify-between gap-3">
-                  <div className="flex flex-col gap-0.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-text-dim">○</span>
-                      <span className="text-text-primary font-bold">Torox Arcade</span>
-                    </div>
-                    <span className="text-[11px] text-text-muted">Pending Publisher Keys</span>
-                  </div>
-                  <Badge variant="slate" size="sm">
-                    STANDBY
-                  </Badge>
-                </div>
-
-                {/* Creator Escrow Engine */}
-                <div className="p-3 bg-canvas border border-border-dark rounded flex items-center justify-between gap-3">
-                  <div className="flex flex-col gap-0.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-gold-accent">●</span>
-                      <span className="text-text-primary font-bold">Creator Escrows</span>
-                      <Badge variant="slate" size="sm">SOON</Badge>
-                    </div>
-                    <span className="text-[11px] text-text-muted">Phase 2 Clipping Engine</span>
-                  </div>
-                  <Link href="/creator-studio">
-                    <Button variant="outline" size="sm" className="text-xs h-7 px-2.5">
-                      PREVIEW
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
+              </div>
             </Card>
 
-            {/* Creator Bounty Spotlight Box */}
-            <Card emphasis="gold">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <IconVideo size={16} className="text-gold-accent" />
-                  <CardTitle>CREATOR BOUNTY RADAR</CardTitle>
-                </div>
-                <Badge variant="slate">COMING SOON</Badge>
-              </CardHeader>
-
-              <CardContent className="flex flex-col gap-3 p-4">
-                <div className="p-3 bg-canvas border border-border-dark rounded flex flex-col gap-2">
-                  <span className="font-grotesk text-sm font-bold text-text-primary">
-                    YouTube Shorts Clip Curator
-                  </span>
-                  <p className="font-mono text-xs text-text-muted">
-                    Curate and render 3 high-energy clutch moments from @ApexPulse livestream archive.
-                  </p>
-                  <div className="flex items-center justify-between pt-2 border-t border-border-subtle font-mono text-xs">
-                    <span className="text-text-muted font-bold">25,000 COINS ($25.00)</span>
-                    <span className="text-gold-accent font-medium">Phase 2 Preview</span>
-                  </div>
-                </div>
-
-                <Link href="/creator-studio">
-                  <Button variant="outline" size="sm" className="w-full">
-                    VIEW ROADMAP & PREVIEW →
-                  </Button>
-                </Link>
-              </CardContent>
+            {/* Creator Studio Teaser */}
+            <Card className="p-5 bg-gradient-to-br from-violet-500/10 via-transparent to-amber-500/5 border-violet-500/20">
+              <Badge variant="violet" size="sm" className="mb-2">
+                COMING SOON
+              </Badge>
+              <h3 className="font-grotesk font-bold text-base text-white mb-1">
+                EarnVerse Creator Studio
+              </h3>
+              <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+                Clip viral stream moments and podcasts to earn up to $100 per bounty.
+              </p>
+              <Link href="/creator-studio">
+                <Button variant="secondary" size="sm" className="w-full">
+                  Explore Studio Roadmap →
+                </Button>
+              </Link>
             </Card>
           </div>
         </div>
@@ -517,32 +454,32 @@ export default function EarnFeedPage() {
 
       {/* Interactive Offerwall Overlay Modal */}
       {offerwall.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-canvas/85 backdrop-blur-md">
-          <div className="relative w-full max-w-5xl h-[88vh] bg-surface-card border border-border-dark rounded shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-5xl h-[88vh] bg-[#0E131E] border border-white/[0.12] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
             {/* Modal Top Bar */}
-            <div className="flex items-center justify-between px-5 py-3.5 bg-surface border-b border-border-dark shrink-0">
+            <div className="flex items-center justify-between px-6 py-4 bg-[#0A0D14] border-b border-white/[0.08] shrink-0">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-8 h-8 rounded bg-lime-neon/10 border border-lime-neon/30 flex items-center justify-center text-lime-neon shrink-0">
-                  <IconBolt size={18} />
+                <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shrink-0">
+                  <IconBolt size={20} />
                 </div>
-                <div className="flex flex-col min-w-0">
+                <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="font-grotesk font-bold text-sm sm:text-base text-text-primary truncate">
+                    <h2 className="font-grotesk font-bold text-base text-white truncate">
                       {offerwall.networkName}
                     </h2>
-                    <Badge variant="lime" size="sm">
-                      VERIFIED GATEWAY
+                    <Badge variant="emerald" size="sm">
+                      VERIFIED
                     </Badge>
                   </div>
                   {offerwall.username && (
-                    <span className="font-mono text-[11px] text-text-muted">
-                      Wallet link: <strong className="text-text-primary">@{offerwall.username}</strong>
+                    <span className="text-xs text-slate-400 font-mono">
+                      Connected user: <strong className="text-white">@{offerwall.username}</strong>
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-3 shrink-0">
                 {offerwall.launchUrl && (
                   <a
                     href={offerwall.launchUrl}
@@ -550,57 +487,48 @@ export default function EarnFeedPage() {
                     rel="noopener noreferrer"
                     className="hidden sm:inline-flex"
                   >
-                    <Button variant="outline" size="sm" leftIcon={<IconArrowUpRight size={14} />}>
-                      OPEN NEW TAB
+                    <Button variant="secondary" size="sm" rightIcon={<IconArrowUpRight size={14} />}>
+                      Open Tab
                     </Button>
                   </a>
                 )}
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <button
                   onClick={closeOfferwall}
-                  className="text-text-muted hover:text-text-primary px-2"
+                  className="w-8 h-8 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 >
-                  <IconX size={20} />
-                </Button>
+                  <IconX size={18} />
+                </button>
               </div>
             </div>
 
             {/* Modal Body */}
-            <div className="flex-1 bg-canvas flex flex-col relative overflow-hidden">
+            <div className="flex-1 bg-[#07080B] flex flex-col relative overflow-hidden">
               {offerwall.loading && (
-                <div className="flex-1 flex flex-col items-center justify-center p-8 gap-4 font-mono text-center">
-                  <div className="w-12 h-12 rounded-full border-2 border-lime-neon border-t-transparent animate-spin" />
-                  <div className="flex flex-col gap-1">
-                    <span className="text-text-primary font-bold text-sm tracking-wide">
-                      ESTABLISHING CRYPTOGRAPHIC SESSION...
-                    </span>
-                    <span className="text-xs text-text-muted">
-                      Binding EarnVerse user ID with {offerwall.networkName}
-                    </span>
+                <div className="flex-1 flex flex-col items-center justify-center p-8 gap-4 text-center">
+                  <div className="w-12 h-12 rounded-full border-3 border-amber-400 border-t-transparent animate-spin" />
+                  <div className="text-white font-bold text-sm tracking-wide">
+                    Connecting to {offerwall.networkName}...
                   </div>
                 </div>
               )}
 
               {offerwall.error && (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 gap-4 text-center max-w-md mx-auto">
-                  <div className="w-14 h-14 rounded-full bg-red-accent/10 border border-red-accent/30 flex items-center justify-center text-red-accent">
+                  <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
                     <IconLock size={26} />
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <h3 className="font-grotesk text-lg font-bold text-text-primary uppercase">
-                      AUTHENTICATION REQUIRED
-                    </h3>
-                    <p className="font-mono text-xs text-text-muted">
-                      {offerwall.error}
-                    </p>
-                  </div>
+                  <h3 className="font-grotesk text-lg font-bold text-white">
+                    Sign In Required
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    {offerwall.error}
+                  </p>
                   <div className="flex items-center gap-3 mt-2">
                     <Link href="/login">
-                      <Button variant="neon">LOG IN TO EARN</Button>
+                      <Button variant="gold">Sign In</Button>
                     </Link>
-                    <Button variant="outline" onClick={closeOfferwall}>
-                      CLOSE
+                    <Button variant="secondary" onClick={closeOfferwall}>
+                      Close
                     </Button>
                   </div>
                 </div>
@@ -609,37 +537,20 @@ export default function EarnFeedPage() {
               {offerwall.launchUrl && !offerwall.loading && (
                 <div className="flex-1 flex flex-col h-full w-full relative">
                   {offerwall.missingConfigNotice && (
-                    <div className="px-4 py-2 bg-gold-accent/10 border-b border-gold-accent/20 flex items-center gap-2 font-mono text-xs text-gold-accent shrink-0">
-                      <IconShield size={14} />
+                    <div className="px-4 py-2 bg-amber-400/10 border-b border-amber-400/20 text-xs text-amber-400 shrink-0">
                       <span>{offerwall.missingConfigNotice}</span>
                     </div>
                   )}
 
                   <iframe
                     src={offerwall.launchUrl}
-                    className="w-full flex-1 border-0 bg-canvas"
+                    className="w-full flex-1 border-0 bg-[#07080B]"
                     title={offerwall.networkName}
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
                     allow="clipboard-write; camera; microphone; geolocation"
                   />
                 </div>
               )}
-            </div>
-
-            {/* Modal Bottom Footer */}
-            <div className="px-5 py-2.5 bg-surface border-t border-border-dark flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-text-muted shrink-0">
-              <span className="flex items-center gap-1.5">
-                <span className="text-lime-neon">✓</span>
-                <span>Webhook Postbacks enabled — rewards credit automatically upon completion</span>
-              </span>
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/admin/postbacks"
-                  className="text-text-dim hover:text-text-primary transition-colors"
-                >
-                  Postback Telemetry →
-                </Link>
-              </div>
             </div>
           </div>
         </div>

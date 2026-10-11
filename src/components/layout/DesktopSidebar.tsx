@@ -16,6 +16,7 @@ import {
   IconCampaign,
   IconUser,
   IconShield,
+  IconArrowRight,
   IconProps,
 } from "@/components/ui/Icons";
 
@@ -24,21 +25,21 @@ interface NavItem {
   href: string;
   icon: React.FC<IconProps>;
   badge?: string;
-  badgeType?: "lime" | "gold" | "slate" | "crimson";
+  badgeType?: "gold" | "emerald" | "violet" | "slate" | "crimson";
 }
 
 const navItems: NavItem[] = [
-  { name: "Home HUD", href: "/home", icon: IconGrid },
-  { name: "Task Matrix", href: "/earn", icon: IconBolt, badge: "HOT", badgeType: "lime" },
-  { name: "Creator Studio", href: "/creator-studio", icon: IconCampaign, badge: "SOON", badgeType: "slate" },
-  { name: "Cashout Terminal", href: "/wallet", icon: IconWallet },
-  { name: "Earnings Ledger", href: "/ledger", icon: IconLedger },
-  { name: "Community", href: "/community", icon: IconCommunity },
-  { name: "Referral Hub", href: "/referrals", icon: IconReferral, badge: "10%", badgeType: "slate" },
+  { name: "Dashboard", href: "/home", icon: IconGrid },
+  { name: "Earn Lounge", href: "/earn", icon: IconBolt, badge: "HOT", badgeType: "gold" },
+  { name: "Creator Studio", href: "/creator-studio", icon: IconCampaign, badge: "SOON", badgeType: "violet" },
+  { name: "Wallet & Cashout", href: "/wallet", icon: IconWallet },
+  { name: "Earnings History", href: "/ledger", icon: IconLedger },
+  { name: "Community Feed", href: "/community", icon: IconCommunity },
+  { name: "Referrals", href: "/referrals", icon: IconReferral, badge: "10%", badgeType: "emerald" },
   { name: "Rewards & Streak", href: "/rewards", icon: IconTrophy },
-  { name: "Submit Proof", href: "/proof", icon: IconVerified },
-  { name: "Operator Profile", href: "/profile", icon: IconUser },
-  { name: "Admin Terminal", href: "/admin", icon: IconShield, badge: "ROOT", badgeType: "crimson" },
+  { name: "Payment Proof", href: "/proof", icon: IconVerified },
+  { name: "Profile & Settings", href: "/profile", icon: IconUser },
+  { name: "Admin Hub", href: "/admin", icon: IconShield, badge: "ROOT", badgeType: "crimson" },
 ];
 
 export function DesktopSidebar() {
@@ -72,28 +73,27 @@ export function DesktopSidebar() {
       });
   }, [pathname]);
 
-
   return (
-    <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[240px] bg-surface border-r border-border-dark z-50 flex-col justify-between p-3 select-none">
-      {/* Top brand header & navigation links */}
-      <div className="flex flex-col gap-4">
-        {/* Brand identity */}
+    <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[260px] bg-[#0A0D14] border-r border-white/[0.08] z-50 flex-col justify-between p-4 select-none">
+      {/* Top Brand & Navigation */}
+      <div className="flex flex-col gap-5">
+        {/* Brand Link */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 px-2.5 py-2 rounded hover:bg-white/[0.04] transition-all group border border-transparent hover:border-border-hover"
+          className="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-white/[0.04] transition-all group"
         >
-          <EvLogo size={32} />
+          <EvLogo size={36} />
           <div className="flex flex-col">
-            <span className="font-grotesk text-sm font-bold tracking-wider text-text-primary uppercase group-hover:text-lime-neon transition-colors">
+            <span className="font-grotesk text-base font-bold tracking-wider text-white group-hover:text-amber-400 transition-colors">
               EARNVERSE
             </span>
-            <span className="font-mono text-[9px] uppercase tracking-wider text-text-dim">
-              TERMINAL v2.4
+            <span className="font-mono text-[10px] text-slate-400 tracking-wider uppercase">
+              REWARD PLATFORM
             </span>
           </div>
         </Link>
 
-        {/* Navigation list */}
+        {/* Navigation Items */}
         <nav className="flex flex-col gap-1 font-grotesk text-xs">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -103,32 +103,34 @@ export function DesktopSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center justify-between px-3 py-2 rounded transition-all duration-150 group ${
+                className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-150 group ${
                   isActive
-                    ? "bg-surface-elevated text-lime-neon font-bold border border-lime-neon/25"
-                    : "text-text-muted hover:text-text-primary hover:bg-white/[0.04] border border-transparent"
+                    ? "bg-gradient-to-r from-amber-500/15 to-transparent text-amber-400 font-bold border border-amber-400/30 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent"
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
                   <IconComponent
-                    size={17}
+                    size={18}
                     strokeWidth={isActive ? 2.2 : 1.8}
                     className={`shrink-0 transition-colors ${
-                      isActive ? "text-lime-neon" : "text-text-dim group-hover:text-text-primary"
+                      isActive ? "text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" : "text-slate-500 group-hover:text-white"
                     }`}
                   />
-                  <span className="truncate tracking-wide">{item.name}</span>
+                  <span className="truncate tracking-wide text-[13px]">{item.name}</span>
                 </div>
                 {item.badge && (
                   <span
-                    className={`font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded font-bold shrink-0 ${
-                      item.badgeType === "lime"
-                        ? "bg-lime-neon/15 text-lime-neon border border-lime-neon/30"
-                        : item.badgeType === "gold"
-                        ? "bg-gold-accent/15 text-gold-accent border border-gold-accent/30"
+                    className={`font-mono text-[10px] tracking-wider px-2 py-0.5 rounded-full font-bold shrink-0 ${
+                      item.badgeType === "gold"
+                        ? "bg-amber-400/15 text-amber-400 border border-amber-400/30"
+                        : item.badgeType === "emerald"
+                        ? "bg-emerald-400/15 text-emerald-400 border border-emerald-400/30"
+                        : item.badgeType === "violet"
+                        ? "bg-violet-400/15 text-violet-400 border border-violet-400/30"
                         : item.badgeType === "crimson"
-                        ? "bg-crimson-accent/15 text-crimson-accent border border-crimson-accent/30"
-                        : "bg-surface-item text-text-muted"
+                        ? "bg-rose-400/15 text-rose-400 border border-rose-400/30"
+                        : "bg-white/[0.06] text-slate-300"
                     }`}
                   >
                     {item.badge}
@@ -140,56 +142,49 @@ export function DesktopSidebar() {
         </nav>
       </div>
 
-      {/* Pinned Bottom Vault Widget */}
-      <div className="rounded bg-surface-card border border-border-dark p-3 flex flex-col gap-2">
+      {/* Pinned Bottom Wallet Card */}
+      <div className="rounded-2xl bg-[#0F1420] border border-white/[0.08] p-4 flex flex-col gap-2.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]">
         <div className="flex items-center justify-between">
-          <span className="font-mono text-[10px] text-text-muted uppercase tracking-wider">
-            Vault Balance
-          </span>
-          <span className={`font-mono text-[9px] uppercase px-1.5 py-0.5 rounded font-semibold ${
+          <span className="text-[11px] text-slate-400 font-medium">Available Balance</span>
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold font-mono ${
             isLoggedIn 
-              ? "bg-gold-accent/10 text-gold-accent border border-gold-accent/25" 
-              : "bg-surface text-text-muted border border-border-dark"
+              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25" 
+              : "bg-white/[0.04] text-slate-400 border border-white/[0.08]"
           }`}>
-            {isLoggedIn ? "PRO · LV 12" : "GUEST MODE"}
+            {isLoggedIn ? "LIVE WALLET" : "GUEST"}
           </span>
         </div>
 
-        <div className="flex items-baseline gap-1.5">
-          <CoinIcon size={16} />
-          <span className="font-mono text-lg font-bold text-text-primary tabular-nums tracking-tight">
+        <div className="flex items-baseline gap-2">
+          <CoinIcon size={20} />
+          <span className="font-mono text-xl font-bold text-white tabular-nums tracking-tight">
             {balance.toLocaleString()}
           </span>
-          <span className="font-mono text-[10px] text-gold-accent font-bold uppercase">
-            COINS
+          <span className="text-xs text-amber-400 font-bold uppercase">
+            Coins
           </span>
         </div>
 
-        <div className="flex items-center justify-between font-mono text-[11px] text-text-muted border-t border-border-subtle pt-2">
-          <span className="text-gold-accent font-medium">≈ ${(balance / 1000).toFixed(2)} USD</span>
-          <div className="flex items-center gap-1.5">
-            <span className={`w-1.5 h-1.5 rounded-full ${isLoggedIn ? "bg-lime-neon" : "bg-text-dim"}`} />
-            <span className="text-[9px] uppercase text-text-dim font-bold">
-              {isLoggedIn ? "SETTLED" : "SANDBOX"}
-            </span>
-          </div>
+        <div className="flex items-center justify-between text-xs text-slate-400 border-t border-white/[0.06] pt-2">
+          <span className="text-emerald-400 font-semibold font-mono">≈ ${(balance / 1000).toFixed(2)} USD</span>
+          <span className="text-[11px] text-slate-500">1k = $1.00</span>
         </div>
 
         {isLoggedIn ? (
           <Link
             href="/wallet"
-            className="w-full text-center py-2 mt-1 bg-lime-neon text-text-inverted font-grotesk text-xs uppercase font-bold rounded hover:brightness-110 hover:shadow-[2px_2px_0_rgba(198,255,62,0.5)] active:scale-[0.98] active:shadow-none transition-all flex items-center justify-center gap-1.5"
+            className="w-full text-center py-2.5 mt-1 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-black font-grotesk text-xs uppercase font-bold rounded-xl hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 shadow-[0_0_16px_rgba(245,158,11,0.25)]"
           >
-            <span>Quick Cashout</span>
-            <IconBolt size={14} strokeWidth={2.5} />
+            <span>Cash Out Funds</span>
+            <IconArrowRight size={14} strokeWidth={2.5} />
           </Link>
         ) : (
           <Link
             href="/login"
-            className="w-full text-center py-2 mt-1 bg-surface-card border border-border-dark hover:border-lime-neon/50 text-text-primary font-grotesk text-xs uppercase font-bold rounded hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+            className="w-full text-center py-2.5 mt-1 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.1] text-white font-grotesk text-xs uppercase font-bold rounded-xl active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
           >
-            <span>Sign In to Cashout</span>
-            <IconBolt size={14} strokeWidth={2.5} className="text-lime-neon" />
+            <span>Sign In to Earn</span>
+            <IconBolt size={14} strokeWidth={2.5} className="text-amber-400" />
           </Link>
         )}
       </div>

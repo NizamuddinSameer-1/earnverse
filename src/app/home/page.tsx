@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { CoinIcon } from "@/components/ui/CoinIcon";
@@ -15,72 +15,65 @@ import {
   IconTrophy,
   IconShield,
   IconArrowRight,
-  IconVault,
+  IconCheck,
+  IconCoins,
 } from "@/components/ui/Icons";
 
 const featuredTasks = [
   {
     id: "ft-1",
-    type: "bounty",
-    title: "Apex Legends 30s Beat-Sync TikTok Cut",
-    creator: "@ApexPulse",
-    time: "15 min",
-    coins: 25000,
-    usd: "$25.00",
-    badge: "CREATOR BOUNTY",
-    badgeType: "gold" as const,
-    spots: "7 left",
-  },
-  {
-    id: "ft-2",
-    type: "survey",
-    title: "Global FinTech & Crypto Payment Habits Study",
-    creator: "BitLabs Research",
+    network: "BITLABS",
+    title: "Global FinTech & Consumer Habits Survey",
+    provider: "BitLabs Research",
     time: "8 min",
     coins: 1450,
     usd: "$1.45",
-    badge: "OFFERWALL SURVEY",
-    badgeType: "lime" as const,
-    spots: "Open",
+    badge: "HIGH MATCH",
+    badgeType: "gold" as const,
+    rating: "4.9 ★",
+  },
+  {
+    id: "ft-2",
+    network: "CPX",
+    title: "Technology & Streaming Platform Preferences",
+    provider: "CPX Research",
+    time: "12 min",
+    coins: 2200,
+    usd: "$2.20",
+    badge: "INSTANT CREDIT",
+    badgeType: "cyan" as const,
+    rating: "4.8 ★",
   },
   {
     id: "ft-3",
-    type: "gaming",
-    title: "Reach Castle Level 10 in War Strategy",
-    creator: "Torox Arcade",
-    time: "20 min",
-    coins: 12000,
-    usd: "$12.00",
-    badge: "HIGH YIELD",
-    badgeType: "lime" as const,
-    spots: "Milestone",
+    network: "TOROX",
+    title: "Rise of Kingdoms: Reach City Hall 10",
+    provider: "Torox Arcade",
+    time: "Milestone",
+    coins: 18500,
+    usd: "$18.50",
+    badge: "HIGH PAYOUT",
+    badgeType: "emerald" as const,
+    rating: "4.9 ★",
   },
   {
     id: "ft-4",
-    type: "bounty",
-    title: "Extract 45s Podcast Debate Hook for Shorts",
-    creator: "@Web3Uncut",
-    time: "10 min",
-    coins: 15000,
-    usd: "$15.00",
-    badge: "CREATOR BOUNTY",
-    badgeType: "gold" as const,
-    spots: "3 left",
+    network: "CREATOR",
+    title: "Clip 45s Podcast Debate for YouTube Shorts",
+    provider: "Creator Studio",
+    time: "15 min",
+    coins: 12000,
+    usd: "$12.00",
+    badge: "BOUNTY",
+    badgeType: "violet" as const,
+    rating: "VIP ONLY",
   },
 ];
 
-const settlementSteps = [
-  { step: "01", label: "Task credited", detail: "Offerwall or bounty coins post to your vault" },
-  { step: "02", label: "Cashout requested", detail: "Coins are held while the request is PENDING" },
-  { step: "03", label: "Operator review", detail: "Each payout is checked before release" },
-  { step: "04", label: "Rail disbursed", detail: "UPI · USDT TRC-20 · LTC · PayPal" },
-];
-
 export default function HomeHudPage() {
-  // Single source of truth for the vault figure: same live endpoint the
-  // sidebar widget uses, so the two numbers on this screen never disagree.
   const [balance, setBalance] = React.useState<number>(0);
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
+  const [username, setUsername] = React.useState<string>("Earner");
 
   React.useEffect(() => {
     fetch("/api/user/wallet")
@@ -106,308 +99,234 @@ export default function HomeHudPage() {
         setIsLoggedIn(false);
         setBalance(0);
       });
+
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.success && data.user && data.user.username) {
+          setUsername(data.user.username);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   return (
     <DashboardLayout>
-      {/* Screen-reader page title: the vault balance is the real focal point, so no
-          visible H1 was used — this restores document structure without visual noise. */}
       <h1 className="sr-only">EarnVerse — Earnings Dashboard</h1>
 
       <div className="flex flex-col gap-8">
-        {/* Top Status & Telemetry Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 rounded bg-surface-card border border-border-dark text-xs font-mono">
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-canvas text-gold-accent border border-gold-accent/25 font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold-accent" />
-              PEG: 1,000 COINS = $1.00
-            </span>
-            <span className="text-text-muted">
-              SETTLEMENT: <strong className="text-text-primary">OPERATOR-REVIEWED</strong>
-            </span>
-            <span className="text-border-hover">|</span>
-            <span className="text-text-muted">
-              LEDGER: <strong className="text-lime-neon">APPEND-ONLY</strong>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3 flex-wrap min-w-0">
-            <span className="text-text-muted">
-              TASK FEED: <strong className="text-lime-neon">OFFERWALLS + BOUNTIES</strong>
-            </span>
-            <Badge variant="lime">
-              ESCROW-PROTECTED
-            </Badge>
-          </div>
-        </div>
-
-        {/* Hero Section: Balance Terminal + Streak Engine */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Vault Balance Card (8 cols) */}
-          <div className="lg:col-span-8 flex flex-col gap-6">
-            <Reveal delay={1}>
-            <Card emphasis="lime">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 shrink-0 rounded bg-lime-neon/15 border border-lime-neon/30 flex items-center justify-center text-lime-neon">
-                    <IconWallet size={18} strokeWidth={2.2} />
-                  </div>
-                  <div className="min-w-0">
-                    <CardTitle as="h2">AVAILABLE VAULT TERMINAL</CardTitle>
-                    <CardDescription>Append-only ledger · operator-reviewed cashouts</CardDescription>
-                  </div>
-                </div>
-
-                {!isLoggedIn ? (
-                  <Badge variant="slate">GUEST PREVIEW</Badge>
-                ) : balance >= 500 ? (
-                  <Badge variant="lime" dot>
-                    READY TO CASHOUT
-                  </Badge>
-                ) : (
-                  <Badge variant="slate">MIN 500 COINS VIA UPI</Badge>
-                )}
-              </CardHeader>
-
-              <CardContent className="flex flex-col gap-6">
-                <div className="flex flex-wrap items-baseline justify-between gap-4">
-                  <div className="flex flex-col">
-                    <span className="text-[11px] font-mono uppercase text-text-muted tracking-wider">
-                      Confirmed Balance
-                    </span>
-                    <div className="flex items-baseline gap-2 mt-1 flex-wrap">
-                      <CoinIcon size={40} />
-                      <span
-                        key={balance}
-                        className="font-grotesk text-5xl sm:text-6xl font-bold text-text-primary tracking-tight tabular-nums leading-none coin-tick"
-                      >
-                        {balance.toLocaleString()}
-                      </span>
-                      <span className="font-mono text-sm text-gold-accent font-bold uppercase">
-                        COINS
-                      </span>
-                      <span className="font-mono text-lg text-text-muted ml-2 tabular-nums">
-                        ≈ ${(balance / 1000).toFixed(2)} USD
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    {isLoggedIn ? (
-                      <Link href="/wallet">
-                        <Button
-                          variant="neon"
-                          size="md"
-                          rightIcon={<IconBolt size={15} strokeWidth={2.5} />}
-                        >
-                          WITHDRAW COINS
-                        </Button>
-                      </Link>
-                    ) : (
-                      <Link href="/login">
-                        <Button
-                          variant="neon"
-                          size="md"
-                          rightIcon={<IconBolt size={15} strokeWidth={2.5} />}
-                        >
-                          SIGN IN TO CASHOUT
-                        </Button>
-                      </Link>
-                    )}
-                    <Link href="/earn">
-                      <Button variant="secondary" size="md">
-                        BROWSE TASKS
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Sub-metrics Strip */}
-                <div className="grid grid-cols-3 gap-3 pt-2 border-t border-border-subtle">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-[10px] text-text-dim uppercase">24h Earnings</span>
-                    <span className="font-mono text-sm font-bold text-lime-neon tabular-nums">
-                      +1,850 Coins ($1.85)
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-[10px] text-text-dim uppercase">Completed Tasks</span>
-                    <span className="font-mono text-sm font-bold text-text-primary tabular-nums">
-                      34 Tasks
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-[10px] text-text-dim uppercase">Trust Score</span>
-                    <span className="font-mono text-sm font-bold text-gold-accent flex items-center gap-1">
-                      <IconShield size={13} /> 100% · 0 Strikes
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            </Reveal>
-
-            {/* Curated Task Matrix Section */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <IconFlame size={18} className="text-lime-neon shrink-0" />
-                  <h2 className="font-grotesk text-base font-bold text-text-primary uppercase tracking-wide">
-                    HIGH-YIELD & CREATOR BOUNTY FEED
-                  </h2>
-                </div>
-                <Link
-                  href="/earn"
-                  className="font-mono text-xs text-lime-neon hover:underline flex items-center gap-1"
-                >
-                  <span>View All Tasks</span>
-                  <IconArrowRight size={14} />
-                </Link>
+        {/* Top Banner: Greeting, Streak & Level Progression */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-white/[0.03] to-indigo-500/10 border border-white/[0.08] backdrop-blur-xl">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-[0_0_16px_rgba(245,158,11,0.25)] text-xl font-bold font-grotesk">
+              {username.slice(0, 1).toUpperCase()}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-grotesk font-bold text-white">
+                  Welcome back, @{username}
+                </span>
+                <Badge variant="gold" size="sm">
+                  PRO TIER
+                </Badge>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {featuredTasks.map((task, i) => (
-                  <Reveal key={task.id} delay={2 + i}>
-                  <Card interactive className="group h-full">
-                    <CardContent className="flex flex-col gap-3 h-full">
-                      <div className="flex items-center justify-between">
-                        <Badge variant={task.badgeType} size="sm">
-                          {task.badge}
-                        </Badge>
-                        <span className="font-mono text-[10px] text-text-dim">
-                          {task.spots}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col gap-1">
-                        <span className="font-grotesk font-bold text-sm text-text-primary group-hover:text-lime-neon transition-colors line-clamp-1">
-                          {task.title}
-                        </span>
-                        <span className="font-mono text-[11px] text-text-muted">
-                          By {task.creator} · {task.time}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-border-subtle">
-                        <div className="flex items-baseline gap-1.5">
-                          <CoinIcon size={14} />
-                          <span className="font-mono font-bold text-sm text-text-primary tabular-nums">
-                            +{task.coins.toLocaleString()}
-                          </span>
-                          <span className="font-mono text-[11px] text-gold-accent font-semibold">
-                            ({task.usd})
-                          </span>
-                        </div>
-
-                        <Link href="/earn">
-                          <Button variant="outline" size="sm">
-                            START
-                          </Button>
-                        </Link>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  </Reveal>
-                ))}
+              <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+                <span>Completed 34 tasks</span>
+                <span>•</span>
+                <span className="text-emerald-400 flex items-center gap-1">
+                  <IconShield size={12} /> 100% Trust Rating
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Right Column (4 cols): Gamified Streak Tracker & Activity Stream */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
-            {/* Gamified Daily Streak Card */}
-            <Card emphasis="gold">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <IconTrophy size={18} className="text-gold-accent" />
-                  <CardTitle>DAILY LOGIN STREAK</CardTitle>
-                </div>
-                <Badge variant="gold">DAY 6 / 7</Badge>
-              </CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-400 text-xs font-semibold">
+              <IconFlame size={16} className="text-amber-400 animate-pulse" />
+              <span>5-Day Streak (1.2X XP)</span>
+            </div>
+            <Link href="/rewards">
+              <Button variant="secondary" size="sm">
+                View Perks
+              </Button>
+            </Link>
+          </div>
+        </div>
 
-              <CardContent className="flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="font-grotesk text-2xl font-bold text-text-primary">
-                      Up to 1.45x
-                    </span>
-                    <span className="font-mono text-[11px] text-text-muted">
-                      On offerwall & clip payouts with an active streak
-                    </span>
-                  </div>
-                  <div className="w-12 h-12 rounded bg-gold-accent/15 border border-gold-accent/30 flex items-center justify-center text-gold-accent">
-                    <IconFlame size={24} />
-                  </div>
+        {/* Wealth Vault Terminal Card */}
+        <Reveal delay={1}>
+          <Card emphasis="gold" className="p-6 sm:p-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/[0.08]">
+              <div>
+                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                  <span>AVAILABLE VAULT BALANCE</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                </span>
+                <div className="flex items-baseline gap-3 mt-2 flex-wrap">
+                  <CoinIcon size={36} />
+                  <span className="font-grotesk text-4xl sm:text-5xl font-bold text-white tracking-tight tabular-nums">
+                    {balance.toLocaleString()}
+                  </span>
+                  <span className="text-base text-amber-400 font-bold uppercase">
+                    Coins
+                  </span>
+                  <span className="text-xl sm:text-2xl font-mono text-emerald-400 font-semibold ml-2 tabular-nums">
+                    ≈ ${(balance / 1000).toFixed(2)} USD
+                  </span>
                 </div>
+              </div>
 
-                {/* 7-Day Pill Visualizer */}
-                <div className="grid grid-cols-7 gap-1.5 pt-2">
-                  {[1, 2, 3, 4, 5, 6, 7].map((day) => {
-                    const isCompleted = day < 6;
-                    const isCurrent = day === 6;
-                    return (
-                      <div
-                        key={day}
-                        className={`flex flex-col items-center justify-center py-2 rounded font-mono text-[10px] border transition-all ${
-                          isCompleted
-                            ? "bg-lime-neon/15 border-lime-neon/30 text-lime-neon font-bold"
-                            : isCurrent
-                            ? "bg-gold-accent/20 border-gold-accent text-gold-accent font-bold ring-1 ring-gold-accent/30"
-                            : "bg-surface border-border-dark text-text-dim"
-                        }`}
-                      >
-                        <span>D{day}</span>
-                        <span className="text-[8px] mt-0.5">
-                          {day === 7 ? "★" : isCompleted ? "✓" : "+50"}
-                        </span>
-                      </div>
-                    );
-                  })}
+              <div className="flex items-center gap-3 shrink-0">
+                <Link href="/wallet">
+                  <Button variant="gold" size="lg" rightIcon={<IconArrowRight size={16} />}>
+                    Cash Out Funds
+                  </Button>
+                </Link>
+                <Link href="/earn">
+                  <Button variant="secondary" size="lg" leftIcon={<IconBolt size={16} className="text-amber-400" />}>
+                    Earn More Coins
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Sub-Metrics Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
+              <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="text-xs text-slate-400">24h Today's Earnings</div>
+                <div className="text-xl font-bold font-grotesk text-amber-400 mt-1 tabular-nums">
+                  +1,850 Coins ($1.85)
                 </div>
-
-                <div className="p-3 rounded bg-surface border border-border-dark flex items-center justify-between font-mono text-[11px]">
-                  <span className="text-text-muted">Day 7 Jackpot:</span>
-                  <strong className="text-gold-accent">+500 COINS ($0.50)</strong>
+              </div>
+              <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="text-xs text-slate-400">Cashout Threshold Status</div>
+                <div className="text-xl font-bold font-grotesk text-emerald-400 mt-1">
+                  {balance >= 5000 ? "Ready to Cash Out" : `$${(balance / 1000).toFixed(2)} / $5.00 Minimum`}
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Settlement Pipeline Explainer */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <IconVault size={16} className="text-lime-neon" />
-                  <CardTitle>SETTLEMENT PIPELINE</CardTitle>
+              </div>
+              <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="text-xs text-slate-400">Reward Multiplier</div>
+                <div className="text-xl font-bold font-grotesk text-cyan-400 mt-1">
+                  1.25X Active Boost
                 </div>
-              </CardHeader>
+              </div>
+            </div>
+          </Card>
+        </Reveal>
 
-              <CardContent className="flex flex-col gap-3">
-                {settlementSteps.map((item) => (
-                  <div
-                    key={item.step}
-                    className="flex items-start gap-3 font-mono text-xs p-2 rounded bg-surface border border-border-subtle"
-                  >
-                    <span className="font-bold text-lime-neon shrink-0">{item.step}</span>
-                    <div className="flex flex-col min-w-0 gap-0.5">
-                      <strong className="text-text-primary">{item.label}</strong>
-                      <span className="text-[10px] text-text-muted">
-                        {item.detail}
+        {/* Hot Tasks & Offers Feed */}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <IconBolt size={20} className="text-amber-400 shrink-0" />
+              <h2 className="font-grotesk text-lg font-bold text-white tracking-wide">
+                TOP HIGH-YIELD OFFERS TODAY
+              </h2>
+            </div>
+            <Link
+              href="/earn"
+              className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
+            >
+              <span>Explore All Offers</span>
+              <IconArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {featuredTasks.map((task, i) => (
+              <Reveal key={task.id} delay={2 + i}>
+                <Card interactive className="p-5 h-full flex flex-col justify-between hover:border-amber-400/40 transition-all">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <Badge variant={task.badgeType} size="sm">
+                        {task.badge}
+                      </Badge>
+                      <span className="text-xs text-slate-400 font-mono">
+                        {task.rating}
                       </span>
                     </div>
-                  </div>
-                ))}
-              </CardContent>
 
-              <CardFooter className="justify-center">
-                <Link
-                  href="/ledger"
-                  className="text-xs text-text-muted hover:text-lime-neon transition-colors"
-                >
-                  Open Full Audit Ledger →
-                </Link>
-              </CardFooter>
-            </Card>
+                    <h3 className="font-grotesk font-bold text-base text-white hover:text-amber-400 transition-colors line-clamp-1 mb-1">
+                      {task.title}
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      {task.provider} • {task.time}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-4 mt-4 border-t border-white/[0.08]">
+                    <div className="flex items-baseline gap-1.5">
+                      <CoinIcon size={16} />
+                      <span className="font-mono font-bold text-base text-white tabular-nums">
+                        +{task.coins.toLocaleString()}
+                      </span>
+                      <span className="text-xs text-amber-400 font-semibold font-mono">
+                        ({task.usd})
+                      </span>
+                    </div>
+                    <Link href={`/earn?open=${task.network.toLowerCase()}`}>
+                      <Button variant="secondary" size="sm" rightIcon={<IconArrowRight size={12} />}>
+                        Start Task
+                      </Button>
+                    </Link>
+                  </div>
+                </Card>
+              </Reveal>
+            ))}
           </div>
+        </div>
+
+        {/* 1-Click Launchpad for BitLabs and CPX */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="p-6 relative overflow-hidden group hover:border-amber-400/40 transition-all">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 font-bold font-mono">
+                  BL
+                </div>
+                <div>
+                  <h3 className="font-grotesk font-bold text-base text-white">BitLabs Offerwall</h3>
+                  <div className="text-xs text-slate-400">High completion rate surveys</div>
+                </div>
+              </div>
+              <Badge variant="gold">
+                OFFICIAL
+              </Badge>
+            </div>
+            <p className="text-xs text-slate-400 mb-5 leading-relaxed">
+              Launch personalized market research studies with instant coin credit directly into your balance.
+            </p>
+            <Link href="/earn?open=bitlabs">
+              <Button variant="gold" size="md" className="w-full" rightIcon={<IconArrowRight size={14} />}>
+                Launch BitLabs Lounge
+              </Button>
+            </Link>
+          </Card>
+
+          <Card className="p-6 relative overflow-hidden group hover:border-cyan-400/40 transition-all">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 font-bold font-mono">
+                  CPX
+                </div>
+                <div>
+                  <h3 className="font-grotesk font-bold text-base text-white">CPX Research</h3>
+                  <div className="text-xs text-slate-400">Adaptive matching & consolation coins</div>
+                </div>
+              </div>
+              <Badge variant="cyan">
+                TOP MATCH
+              </Badge>
+            </div>
+            <p className="text-xs text-slate-400 mb-5 leading-relaxed">
+              Answer quick profile questions to unlock dozens of live surveys with automatic fraud verification.
+            </p>
+            <Link href="/earn?open=cpx">
+              <Button variant="secondary" size="md" className="w-full hover:border-cyan-400/50" rightIcon={<IconArrowRight size={14} />}>
+                Launch CPX Lounge
+              </Button>
+            </Link>
+          </Card>
         </div>
       </div>
     </DashboardLayout>

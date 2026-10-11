@@ -1,29 +1,37 @@
 @import "tailwindcss";
 
 @theme {
-  --color-canvas: #0B0D13;
-  --color-surface: #0E1118;
-  --color-surface-card: #131620;
-  --color-surface-elevated: #191D2A;
-  --color-surface-item: #1E2333;
-  --color-surface-high: #272C3E;
-  --color-surface-lowest: #07080C;
+  --color-canvas: #07080B;
+  --color-canvas-subtle: #0B0E14;
+  --color-surface: #0E121B;
+  --color-surface-card: #121723;
+  --color-surface-elevated: #181F2F;
+  --color-surface-item: #1E263A;
+  --color-surface-high: #263048;
+  --color-surface-lowest: #050608;
   
-  --color-border-dark: #222636;
-  --color-border-subtle: #1C202E;
-  --color-border-hover: #33394E;
+  --color-border-hairline: rgba(255, 255, 255, 0.08);
+  --color-border-subtle: rgba(255, 255, 255, 0.12);
+  --color-border-hover: rgba(255, 255, 255, 0.2);
+  --color-border-dark: #1A2030;
   
-  --color-lime-neon: #C6FF3E;
-  --color-lime-dim: #9ece27;
+  --color-gold-primary: #F59E0B;
+  --color-gold-hover: #FBBF24;
+  --color-gold-light: #FDE68A;
+  --color-gold-glow: rgba(245, 158, 11, 0.2);
   
-  --color-gold-accent: #FFB020;
-  --color-gold-dim: #CC8E14;
-  --color-crimson-accent: #FF4757;
+  --color-emerald-primary: #10B981;
+  --color-emerald-glow: rgba(16, 185, 129, 0.2);
   
-  --color-text-primary: #F1F3F9;
+  --color-cyan-accent: #06B6D4;
+  --color-violet-accent: #8B5CF6;
+  --color-crimson-accent: #EF4444;
+  
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #CBD5E1;
   --color-text-muted: #94A3B8;
-  --color-text-dim: #7A8699;
-  --color-text-inverted: #0A0D08;
+  --color-text-dim: #64748B;
+  --color-text-inverted: #07080B;
   
   --font-grotesk: var(--font-space-grotesk), sans-serif;
   --font-body: var(--font-ibm-plex-sans), sans-serif;
@@ -35,15 +43,14 @@
 }
 
 html {
-  /* Mobile integrity: a fixed sidebar/header or a wide child must never
-     produce a sideways-scrolling page. See design debt audit 2026-10-08. */
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: #0B0D13;
-  color: #F1F3F9;
-  font-family: var(--font-ibm-plex-sans), sans-serif;
+  background-color: #07080B;
+  color: #F8FAFC;
+  font-family: var(--font-ibm-plex-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -51,50 +58,77 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Long unbroken tokens (IDs, URLs, task names) must wrap rather than
-   push the layout wide — a common cause of mobile overflow. */
-main p,
-main h1,
-main h2,
-main h3,
-main span,
-main strong {
-  overflow-wrap: anywhere;
+/* Background Ambient Lighting */
+.ambient-glow-bg {
+  position: relative;
 }
 
-/* Tables scroll inside their own container instead of widening the page. */
-main table {
-  display: block;
-  max-width: 100%;
-  overflow-x: auto;
+.ambient-glow-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1200px;
+  height: 500px;
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08) 0%, rgba(99, 102, 241, 0.04) 50%, transparent 80%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* Tabular numbers for all financial & coin data */
+/* Linear & Apple Craft Card Utilities */
+.card-linear {
+  background: rgba(14, 18, 27, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 4px 20px -2px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-linear:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+    0 12px 32px -4px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* High-Trust Financial Tabular Numerals */
 .tabular-nums, [data-numeric], .font-mono {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
 }
 
-/* Crisp terminal custom scrollbar */
+/* Text Wrapping Guard */
+main p, main h1, main h2, main h3, main span, main strong {
+  overflow-wrap: anywhere;
+}
+
+/* Sleek Minimal Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0B0D13;
+  background: #07080B;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #222636;
+  background: #1E263A;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #31374C;
+  background: #2E3852;
 }
 
-/* Micro-interaction utility for tactile buttons */
+/* Tactile Button Motion */
 .btn-tactile {
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -103,107 +137,54 @@ main table {
   transform: scale(0.98) translateY(1px);
 }
 
-/* ============================================================
-   MOTION SYSTEM — resolves design debt D-9 (no motion spec)
-   Arcade Terminal: crisp, mechanical, zero blur, zero bounce.
-   Durations are deliberately short; this is a terminal, not a toy.
-   ============================================================ */
-
-@theme {
-  /* Easing: one shared curve drives the whole UI (consistency = quality) */
-  --ease-terminal: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
-
-  /* Duration scale — mirrors micro / standard / emphasis */
-  --duration-micro: 120ms;   /* hover, press, checkbox tick */
-  --duration-standard: 200ms; /* dropdowns, tooltips, tab switch */
-  --duration-emphasis: 320ms; /* modals, drawers, page-level reveals */
-
-  /* Stagger unit for sequence reveals */
-  --stagger-unit: 60ms;
+/* Shimmer Animation for Badges and High Priority Cards */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
 }
 
-/* --- Reveal on mount (SSR-safe: starts hidden only when JS enables it) --- */
-[data-reveal] {
-  opacity: 1;
+.shimmer-effect {
+  position: relative;
+  overflow: hidden;
 }
 
-.js [data-reveal] {
-  opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity var(--duration-emphasis) var(--ease-terminal),
-    transform var(--duration-emphasis) var(--ease-terminal);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
-}
-
-.js [data-reveal="in"] {
-  opacity: 1;
-  transform: none;
-}
-
-/* --- Live coin tick: money values acknowledge change without layout shift --- */
-@keyframes coin-tick {
-  0%   { transform: translateY(0); }
-  35%  { transform: translateY(-2px); }
-  100% { transform: translateY(0); }
-}
-
-.coin-tick {
-  animation: coin-tick 260ms var(--ease-terminal);
-  font-variant-numeric: tabular-nums;
-}
-
-/* --- Pulse for live/streaming indicators --- */
-@keyframes live-pulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.45; }
-}
-
-.live-dot {
-  animation: live-pulse 2s var(--ease-terminal) infinite;
-}
-
-/* --- Scanline sheen for terminal hero surfaces (no blur, no gradient text) --- */
-@keyframes scan-drift {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-.scan-sheen::after {
+.shimmer-effect::after {
   content: "";
   position: absolute;
-  inset-inline: 0;
-  height: 40%;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(198, 255, 62, 0.04),
-    transparent
-  );
-  animation: scan-drift 6s linear infinite;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  animation: shimmer 3s infinite;
   pointer-events: none;
 }
 
+/* Marquee Animation for Live Social Proof */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Reduced Motion Safety */
 @media (prefers-reduced-motion: reduce) {
-  /* Mandatory: non-essential motion must be disableable (WCAG 2.3.3). */
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .scan-sheen::after,
-  .live-dot {
+  .animate-marquee {
     animation: none !important;
   }
 }

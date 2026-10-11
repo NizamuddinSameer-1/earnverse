@@ -2,7 +2,7 @@ import React from "react";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "neon" | "secondary" | "outline" | "ghost" | "gold" | "danger";
+  variant?: "gold" | "neon" | "secondary" | "outline" | "ghost" | "danger" | "emerald";
   size?: "sm" | "md" | "lg";
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -12,7 +12,7 @@ export interface ButtonProps
 export function Button({
   children,
   className = "",
-  variant = "neon",
+  variant = "gold",
   size = "md",
   leftIcon,
   rightIcon,
@@ -21,28 +21,29 @@ export function Button({
   ...props
 }: ButtonProps) {
   const sizeStyles = {
-    sm: "px-3 py-1.5 text-xs gap-1.5 rounded",
-    md: "px-4 py-2 text-xs font-bold gap-2 rounded",
-    lg: "px-6 py-3 text-sm font-bold gap-2.5 rounded",
+    sm: "px-3 py-1.5 text-xs gap-1.5 rounded-lg",
+    md: "px-4 py-2 text-xs font-semibold gap-2 rounded-xl",
+    lg: "px-6 py-2.5 text-sm font-semibold gap-2.5 rounded-xl",
   }[size];
 
   const variantStyles = {
-    neon: "bg-lime-neon text-text-inverted hover:brightness-110 hover:shadow-[2px_2px_0_rgba(198,255,62,0.5)] active:shadow-none border border-lime-dim/60",
-    gold: "bg-gold-accent text-text-inverted hover:brightness-110 hover:shadow-[2px_2px_0_rgba(255,176,32,0.5)] active:shadow-none border border-gold-dim/60",
+    gold: "bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:shadow-[0_0_28px_rgba(245,158,11,0.4)] hover:brightness-105 active:scale-[0.98] border border-amber-300/30",
+    neon: "bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:shadow-[0_0_28px_rgba(245,158,11,0.4)] hover:brightness-105 active:scale-[0.98] border border-amber-300/30",
+    emerald: "bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-bold shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_28px_rgba(16,185,129,0.4)] hover:brightness-105 active:scale-[0.98] border border-emerald-300/30",
     secondary:
-      "bg-surface-card text-text-primary border border-border-dark hover:border-border-hover hover:bg-surface-elevated",
+      "bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/[0.1] shadow-sm hover:border-white/[0.2] active:scale-[0.98]",
     outline:
-      "bg-transparent text-text-primary border border-border-dark hover:border-lime-neon/50 hover:text-lime-neon hover:bg-lime-neon/[0.04]",
+      "bg-transparent text-white border border-white/[0.15] hover:border-amber-400/50 hover:text-amber-400 hover:bg-amber-400/[0.05] active:scale-[0.98]",
     ghost:
-      "bg-transparent text-text-muted hover:text-text-primary hover:bg-white/[0.05] active:bg-white/[0.08]",
+      "bg-transparent text-slate-400 hover:text-white hover:bg-white/[0.06] active:bg-white/[0.1]",
     danger:
-      "bg-crimson-accent/15 text-crimson-accent border border-crimson-accent/30 hover:bg-crimson-accent/25 active:bg-crimson-accent/35",
+      "bg-rose-500/15 text-rose-400 border border-rose-500/30 hover:bg-rose-500/25 active:bg-rose-500/35",
   }[variant];
 
   return (
     <button
       disabled={disabled || isLoading}
-      className={`inline-flex items-center justify-center font-grotesk tracking-wide uppercase select-none transition-all duration-150 active:scale-[0.98] active:translate-y-[0.5px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-neon/40 disabled:opacity-50 disabled:pointer-events-none cursor-pointer ${sizeStyles} ${variantStyles} ${className}`}
+      className={`inline-flex items-center justify-center font-grotesk tracking-wide select-none transition-all duration-150 active:scale-[0.98] active:translate-y-[0.5px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/40 disabled:opacity-50 disabled:pointer-events-none cursor-pointer ${sizeStyles} ${variantStyles} ${className}`}
       {...props}
     >
       {isLoading ? (

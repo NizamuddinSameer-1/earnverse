@@ -17,21 +17,14 @@ interface NavItem {
   name: string;
   href: string;
   icon: React.FC<IconProps>;
-  /** Short label for the cramped mobile bar. */
   short: string;
 }
 
-/**
- * Mobile bottom bar — the 5 destinations specified in SYSTEM_MAP.md §1.
- * Deliberately NOT the full 11-item desktop sidebar: a bottom bar cannot hold
- * 11 items at a legible tap size, and burying earnings behind "more" would
- * hurt the primary loop (Earn -> Spend).
- */
 const navItems: NavItem[] = [
-  { name: "Home HUD", href: "/home", icon: IconGrid, short: "Home" },
-  { name: "Task Matrix", href: "/earn", icon: IconBolt, short: "Earn" },
-  { name: "Community", href: "/community", icon: IconCommunity, short: "Community" },
-  { name: "Cashout", href: "/wallet", icon: IconWallet, short: "Wallet" },
+  { name: "Home", href: "/home", icon: IconGrid, short: "Home" },
+  { name: "Earn Lounge", href: "/earn", icon: IconBolt, short: "Earn" },
+  { name: "Community", href: "/community", icon: IconCommunity, short: "Feed" },
+  { name: "Wallet", href: "/wallet", icon: IconWallet, short: "Wallet" },
   { name: "Profile", href: "/profile", icon: IconUser, short: "Profile" },
 ];
 
@@ -51,9 +44,7 @@ export function MobileNav() {
         const coins = data?.data?.availableCoins;
         if (data?.success && typeof coins === "number") setBalance(coins);
       })
-      .catch(() => {
-        /* Guest state: show 0, never block the nav on a failed fetch. */
-      });
+      .catch(() => {});
 
     return () => {
       active = false;
@@ -62,20 +53,21 @@ export function MobileNav() {
 
   return (
     <>
-      {/* Balance strip — coin balance must be visible from every screen. */}
-      <div className="lg:hidden fixed bottom-[68px] left-0 right-0 z-40 flex items-center justify-center pointer-events-none">
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-card border border-border-dark pointer-events-auto">
-          <CoinIcon size={13} />
-          <span className="font-mono text-xs font-bold text-text-primary tabular-nums">
+      {/* Floating Balance Strip */}
+      <div className="lg:hidden fixed bottom-[72px] left-0 right-0 z-40 flex items-center justify-center pointer-events-none">
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0D111A]/90 backdrop-blur-xl border border-white/[0.12] shadow-[0_4px_16px_rgba(0,0,0,0.5)] pointer-events-auto">
+          <CoinIcon size={14} />
+          <span className="font-mono text-xs font-bold text-white tabular-nums">
             {mounted ? balance.toLocaleString() : "0"}
           </span>
-          <span className="font-mono text-[9px] uppercase text-gold-accent font-bold">coins</span>
+          <span className="text-[10px] uppercase text-amber-400 font-bold">Coins</span>
+          <span className="text-[10px] text-slate-400 font-mono">(${(balance / 1000).toFixed(2)})</span>
         </div>
       </div>
 
       <nav
-        aria-label="Primary"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface border-t border-border-dark"
+        aria-label="Mobile Navigation"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#07080B]/90 backdrop-blur-2xl border-t border-white/[0.08]"
       >
         <ul className="grid grid-cols-5">
           {navItems.map((item) => {
@@ -87,22 +79,18 @@ export function MobileNav() {
                 <Link
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
-                  className={`flex flex-col items-center justify-center gap-1 min-h-[68px] px-1 py-2 transition-colors ${
-                    isActive ? "text-lime-neon" : "text-text-dim"
+                  className={`flex flex-col items-center justify-center gap-1 min-h-[66px] px-1 py-1.5 transition-colors ${
+                    isActive ? "text-amber-400" : "text-slate-400 hover:text-white"
                   }`}
                 >
                   <span
-                    className={`flex items-center justify-center w-11 h-7 rounded transition-colors ${
-                      isActive ? "bg-lime-neon/12" : ""
+                    className={`flex items-center justify-center w-12 h-7 rounded-xl transition-all ${
+                      isActive ? "bg-amber-400/15 border border-amber-400/30 text-amber-400" : ""
                     }`}
                   >
-                    <IconComponent size={19} strokeWidth={isActive ? 2.2 : 1.8} />
+                    <IconComponent size={18} strokeWidth={isActive ? 2.2 : 1.8} />
                   </span>
-                  <span
-                    className={`font-mono text-[9px] uppercase tracking-wide ${
-                      isActive ? "text-lime-neon font-bold" : ""
-                    }`}
-                  >
+                  <span className={`text-[10px] tracking-wide ${isActive ? "font-bold text-amber-400" : "font-normal"}`}>
                     {item.short}
                   </span>
                 </Link>
